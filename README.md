@@ -37,3 +37,6 @@ Run 'non_neural_models.py' after setting the variables 'CSV_TRAIN' and 'IMAGE_DI
 to train and test a logistic regression classifier, gradient boosted trees, and support vector machine on the
 training data.
 
+# Exploratory Data Analysis
+Make sure to check out the 'EDA.ipynb' Jupyter notebook for cool graphs.
+
