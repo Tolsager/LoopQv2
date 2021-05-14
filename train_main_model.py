@@ -50,7 +50,7 @@ def train_model(model, transforms_train, transforms_cv, augmentations, lr=1e-3, 
     train_size : float, default=0.9
         fraction of the training set used for training. The rest is used as the cross validation set
 
-    seed : int, default=24
+    seed : int, default=SEED=24
         used to seed the data split and the model
 
     model_name : str, default='best_model.pt'
@@ -62,6 +62,7 @@ def train_model(model, transforms_train, transforms_cv, augmentations, lr=1e-3, 
     """
 
     print()
+    # check that CSV_TRAIN and IMAGE_DIRECTORY_TRAIN are set
     check_paths()
     seed_everything(seed)
 
@@ -79,7 +80,7 @@ def train_model(model, transforms_train, transforms_cv, augmentations, lr=1e-3, 
 
     model.to(DEVICE)
 
-    # load model weights if given if given
+    # load model weights if given
     if retrain_from is not None:
         print(f"Retraining from {retrain_from}\n")
         model.load_state_dict(torch.load(retrain_from))
@@ -93,7 +94,7 @@ def train_model(model, transforms_train, transforms_cv, augmentations, lr=1e-3, 
     best_accuracy_cv = 0
     best_epoch = 0
     current_patience = 0
-    current_layer = 16  # specifies the layer to be unfrozen
+    current_layer = 16  # specifies the layers to be unfrozen
 
     last_accuracy = 0  # used to check for divergence
     for epoch in range(max_epochs):
@@ -116,7 +117,7 @@ def train_model(model, transforms_train, transforms_cv, augmentations, lr=1e-3, 
                     param.requires_grad = True
                 unfrozen = True
             else:
-                # unfreeze four feature layers
+                # unfreeze four feature blocks
                 for i in range(4):
                     for name, param in model.named_parameters():
                         if str(current_layer) in name:
@@ -131,6 +132,7 @@ def train_model(model, transforms_train, transforms_cv, augmentations, lr=1e-3, 
         accuracy_cv = eval_fn(model, dl_cv, augmentations)
         print(f"    Cross validation accuracy: {accuracy_cv}\n")
 
+        # save the model if a new best model is found
         if accuracy_cv > best_accuracy_cv:
             torch.save(model.state_dict(), model_name)
             best_accuracy_cv = accuracy_cv
@@ -138,7 +140,7 @@ def train_model(model, transforms_train, transforms_cv, augmentations, lr=1e-3, 
             best_epoch = epoch
 
         if accuracy_cv > last_accuracy:
-            current_patience = 0
+            current_patience = 0  # reset patience if the model has better cv accuracy than last epoch
         else:
             current_patience += 1
         last_accuracy = accuracy_cv

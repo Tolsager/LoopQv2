@@ -130,8 +130,8 @@ def infer_fn(model, dl, augmentations):
 
         Returns
         -------
-        inferences : numpy array
-            The inferences as a numpy array
+        inferences : list
+            The inferences in a list
         """
 
     inferences = []
@@ -156,10 +156,5 @@ def infer_fn(model, dl, augmentations):
                 counts = torch.bincount(predictions[i, :])  # count the number of predictions of each class
                 # final_prediction.append(torch.argmax(counts))
                 inferences.append(torch.argmax(counts).detach().cpu().item())
-        #
-        #     final_prediction = torch.stack(final_prediction)
-        #
-        #     inferences.append(final_prediction)
-        #
-        # inferences = torch.stack(inferences, dim=0).numpy()
+
         return inferences

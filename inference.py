@@ -12,14 +12,14 @@ from dataset import EmotionDataset
 def get_inferences(model_name, transforms_test, augmentations, batch_size=64):
     """Computes the inferences and saves it to a csv
 
-    The function uses the dataframe at CSV_TEST specified in config to get the image ids and then expect the images
-    to be in the directory specified by IMAGE_DIRECTORY_TEST in config.
+    The function uses the dataframe at CSV_TEST specified in 'config.py' to get the image ids and expect the images
+    to be in the directory specified by IMAGE_DIRECTORY_TEST in 'config.py'.
     The inferences is saved as 'inferences.csv' in the current directory.
 
     Parameters
     ----------
     model_name : str
-        path to model to infer on
+        path to model to infer with
 
     transforms_test : torchvision.transforms.Compose
         torchvision transforms chained together with Compose given to the test dataset
@@ -28,12 +28,14 @@ def get_inferences(model_name, transforms_test, augmentations, batch_size=64):
         Transformations called on the image before prediction for test-time augmentation
 
     batch_size : int, default=64
-        batch size for inference'
+        batch size for inference
     """
 
     print()
+    # check that CSV_TEST and IMAGE_DIRECTORY_TEST exists
     check_paths(infer=True)
 
+    # load df
     df = pd.read_csv(CSV_TEST, index_col=0)
 
     # create dataset
@@ -42,12 +44,15 @@ def get_inferences(model_name, transforms_test, augmentations, batch_size=64):
     # create dataloader
     dl = DataLoader(ds, batch_size=batch_size)
 
+    # create model and load weights
     model = timm.create_model('rexnet_150', num_classes=7)
     model.to(DEVICE)
     model.load_state_dict(torch.load(model_name))
 
+    # compute inferences
     inferences = infer_fn(model, dl, augmentations)
 
+    # save as csv
     df['emotion'] = inferences
     df.to_csv('inferences.csv')
 
