@@ -5,6 +5,10 @@ To make sure you can run the code, install all the dependencies from 'requiremen
 python -m pip install -r requirements.txt
 ```
 
+Please make sure that CUDA is available with your torch installation with
+```
+torch.cuda.is_available()
+```
 # Training the primary model
 Training requires setting the path to the training csv and directory of training images.
 Go to 'config.py' and set the variables 'CSV_TRAIN' and 'IMAGE_DIRECTORY_TRAIN' to the corresponding paths.
