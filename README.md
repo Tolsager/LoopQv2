@@ -11,8 +11,7 @@ Go to 'config.py' and set the variables 'CSV_TRAIN' and 'IMAGE_DIRECTORY_TRAIN' 
 
 When the paths are set, run 'train_main_model.py' to train the model for 20 epochs and save the best model as
 'best_model.pt'. To increase accuracy, go to 'train_main_model.py' and add the following arguments to the function call
- in the last line of the script: retrain_from='best_model.pt'.
- Optionally change the function call with this:
+ in the last line of the script: retrain_from='best_model.pt' or use the functional call below:
 
  ```
  train_model(model, transforms_train, transforms_cv, augmentations, retrain_from='best_model.pt', max_epochs=5,
