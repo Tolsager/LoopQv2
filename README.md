@@ -15,7 +15,7 @@ When the paths are set, run 'train_main_model.py' to train the model for 20 epoc
 
  ```
  train_model(model, transforms_train, transforms_cv, augmentations, retrain_from='best_model.pt', max_epochs=5,
- name='best_model2.pt')
+ model_name='best_model2.pt')
  ```
 
 This will save the new model as 'best_model2.pt'
