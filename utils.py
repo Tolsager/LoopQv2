@@ -35,3 +35,5 @@ def check_paths(infer=False):
         input("Once the paths have been updated, run the script again.")
         print("Exiting...")
         exit()
+
+    print("All paths exist. Continuing\n")

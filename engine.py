@@ -151,14 +151,15 @@ def infer_fn(model, dl, augmentations):
             predictions = torch.stack(predictions, dim=1)
 
             # decide the final prediction by majority-voting
-            final_prediction = []
+            # final_prediction = []
             for i in range(predictions.shape[0]):
                 counts = torch.bincount(predictions[i, :])  # count the number of predictions of each class
-                final_prediction.append(torch.argmax(counts))
-
-            final_prediction = torch.stack(final_prediction)
-
-            inferences.append(final_prediction)
-
-        inferences = torch.stack(inferences, dim=0).numpy()
+                # final_prediction.append(torch.argmax(counts))
+                inferences.append(torch.argmax(counts).detach().cpu().item())
+        #
+        #     final_prediction = torch.stack(final_prediction)
+        #
+        #     inferences.append(final_prediction)
+        #
+        # inferences = torch.stack(inferences, dim=0).numpy()
         return inferences

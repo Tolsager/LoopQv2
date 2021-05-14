@@ -9,7 +9,7 @@ from engine import infer_fn
 from dataset import EmotionDataset
 
 
-def get_inferences(model, transforms_test, augmentations, batch_size=64):
+def get_inferences(model_name, transforms_test, augmentations, batch_size=64):
     """Computes the inferences and saves it to a csv
 
     The function uses the dataframe at CSV_TEST specified in config to get the image ids and then expect the images
@@ -18,8 +18,8 @@ def get_inferences(model, transforms_test, augmentations, batch_size=64):
 
     Parameters
     ----------
-    model : torch.nn.Module
-        pytorch model to be trained
+    model_name : str
+        path to model to infer on
 
     transforms_test : torchvision.transforms.Compose
         torchvision transforms chained together with Compose given to the test dataset
@@ -42,6 +42,10 @@ def get_inferences(model, transforms_test, augmentations, batch_size=64):
     # create dataloader
     dl = DataLoader(ds, batch_size=batch_size)
 
+    model = timm.create_model('rexnet_150', num_classes=7)
+    model.to(DEVICE)
+    model.load_state_dict(torch.load(model_name))
+
     inferences = infer_fn(model, dl, augmentations)
 
     df['emotion'] = inferences
@@ -49,10 +53,6 @@ def get_inferences(model, transforms_test, augmentations, batch_size=64):
 
 
 if __name__ == '__main__':
-    model = timm.create_model('rexnet_150', pretrained=True, num_classes=7)
-    model.load_state_dict(torch.load())
-
-
     transforms_test = transforms.Compose([
         transforms.Resize((256, 256)),
         transforms.CenterCrop((224, 224)),
@@ -67,4 +67,5 @@ if __name__ == '__main__':
         transforms.RandomHorizontalFlip(p=1.0)
     ]
 
-    get_inferences(model, transforms_test, augmentations)
+    model_name = 'RexNet9.pt'
+    get_inferences(model_name, transforms_test, augmentations)
