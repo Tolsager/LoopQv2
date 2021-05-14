@@ -11,7 +11,7 @@ from dataset import EmotionDataset
 
 
 def train_model(model, transforms_train, transforms_cv, augmentations, lr=1e-3, weight_decay=1e-3, batch_size_train=32,
-                batch_size_cv=64, max_epochs=20, patience=3, train_size=0.9, seed=24, model_name='best_model.pt',
+                batch_size_cv=64, max_epochs=20, patience=3, train_size=0.9, seed=SEED, model_name='best_model.pt',
                 retrain_from=None):
     """Train pretrained ReXNet
 
